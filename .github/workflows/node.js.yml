@@ -22,13 +22,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: ./backend/package-lock.json   # Pointing to backend's lock file
+        cache-dependency-path: ./backend/package-lock.json   
     - name: Install dependencies for Backend
       working-directory: ./backend
       run: npm install
     - name: Build Backend
       working-directory: ./backend
       run: npm run build --if-present
+    - name: pm2 restart
+      working-directory: ./backend
+      run: pm2 restart index.js
 
     # Install and build frontend
     - name: Set up Node.js for Frontend
@@ -42,4 +45,4 @@ jobs:
       run: npm install
     - name: Build Frontend
       working-directory: ./front
-      run: npm run build --if-present
+      run: npm run build 
