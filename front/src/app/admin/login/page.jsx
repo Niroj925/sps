@@ -2,12 +2,10 @@
 
 import React, { useState } from "react";
 import styles from "./login.module.css";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "@/component/api/api";
-import { setIsLogged } from "@/app/redux/slicers/userSlice";
 
 function LoginPage() {
   const [email, setEmail] = useState();
@@ -15,8 +13,6 @@ function LoginPage() {
   const [clicked, setClicked] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const dispatch = useDispatch();
 
   const router = useRouter();
 
@@ -32,7 +28,7 @@ function LoginPage() {
       const res = await api.post("/admin/login", data);
       console.log(res.data);
       if (res.status === 200) {
-        dispatch(setIsLogged(true));
+        localStorage.setItem('isLogged',true);
         router.push(`/admin/profile`);
       
       } else {

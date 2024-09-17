@@ -2,13 +2,10 @@
 
 import React, { useState } from "react";
 import styles from "./login.module.css";
-import { useDispatch } from "react-redux";
-import { login } from "@/app/redux/slicers/adminSlice";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import api from "@/component/api/api";
-import { setIsLogged } from "@/app/redux/slicers/userSlice";
 
 function LoginPage() {
   const [email, setEmail] = useState();
@@ -16,8 +13,6 @@ function LoginPage() {
   const [clicked, setClicked] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  const dispatch = useDispatch();
 
   const router = useRouter();
 
@@ -34,7 +29,7 @@ function LoginPage() {
 
       if (res.status === 200) {
         if(res.data.success==true){
-        dispatch(setIsLogged(true));
+        localStorage.setItem('isLogged',true);
         router.push(`/doctor/profile?id=${res.data.userId}`);
         }else{
           toast.error("Not Registered Contact to Admin", {

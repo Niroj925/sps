@@ -25,12 +25,6 @@ function Profile() {
   const [email,setEmail]=useState('');
   const [password,setPassword]=useState('');
   const [doctorByUser, setDoctorByUser] = useState({});
-  //   const token = localStorage.getItem("token");
-
-  const router = useRouter();
-
-  const searchParam = useSearchParams();
-  const doctorId = searchParam.get("id");
 
   const getPatient = async () => {
     // console.log("doctorid;", doctorId);

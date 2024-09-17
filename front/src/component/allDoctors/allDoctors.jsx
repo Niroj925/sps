@@ -1,9 +1,7 @@
 import styles from "./alldoctors.module.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import RatedStars from "../rating/ratedStar";
-import api from "../api/api";
 
 const AllDoctors = ({ doctor }) => {
 

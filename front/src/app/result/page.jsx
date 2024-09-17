@@ -1,34 +1,38 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import ReactSpeedometer from "react-d3-speedometer";
 import styles from './result.module.css';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { setStrokeValue } from '../redux/slicers/userSlice';
+import dynamic from 'next/dynamic';
 
-function ResultPage() {  
+const SearchParamsWrapper = dynamic(() => 
+  import('next/navigation').then((mod) => {
+    const UseSearchParams = () => {
+      const searchParams = mod.useSearchParams();
+      return { searchParams };
+    };
+    return UseSearchParams;
+  }),
+  { ssr: false }
+);
 
+const ResultPage = () => {
   const [risk, setRisk] = useState(false);
-
+  const [value, setValue] = useState(0);
   const router = useRouter();
-  const dispatch = useDispatch();
-  const searchParam = useSearchParams();
-  const value = parseFloat(searchParam.get("s_value"));
-  console.log(value);
 
-  useEffect(() => {
-    dispatch(setStrokeValue(value));
-    setRisk(value > 49 ? true : false);
-  }, [value, dispatch]);  // Added 'dispatch' to the dependency array
+  const ResultContent = () => {
+    const { searchParams } = SearchParamsWrapper();
 
-  const handleClick = () => {
-    router.push('/doctors');
-  };
+    useEffect(() => {
+      const paramValue = parseFloat(searchParams.get("s_value")) || 0;
+      setValue(paramValue);
+      localStorage.setItem('strokeValue', paramValue);
+      setRisk(paramValue > 49);
+    }, [searchParams]);
 
-  return (
-    <div className={styles.container}>
+    return (
       <div className={styles.result}>
         <ReactSpeedometer
           maxValue={100}
@@ -45,14 +49,22 @@ function ResultPage() {
         </div>
         <div>
           {risk && (
-            <button onClick={handleClick} className={styles.checkbtn}>
+            <button onClick={() => router.push('/doctors')} className={styles.checkbtn}>
               Check Up Now
             </button>
           )}
         </div>
       </div>
+    );
+  };
+
+  return (
+    <div className={styles.container}>
+      <Suspense fallback={<div>Loading...</div>}>
+        <ResultContent />
+      </Suspense>
     </div>
   );
-}
+};
 
-export default ResultPage;  // Export component with an uppercase name
+export default ResultPage;
