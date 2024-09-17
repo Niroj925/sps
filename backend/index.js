@@ -19,7 +19,7 @@ app.use('/patient',patientRoute);
 app.use('/user',userRouter);
 
 app.get('/',(req,res)=>{
-   res.send({"msg":'server is working well.'});
+   res.send({"msg":'server is working well gaich'});
 })
 
 app.listen(4040,async()=>{
